@@ -3,10 +3,16 @@
 
 Vagrant.require_version ">= 1.3.5"
 
-Vagrant::Config.run do |config|
+Vagrant.configure("2") do |config|
 
   # for github clones
   config.ssh.forward_agent = true
+
+
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 1024
+    v.cpus = 2
+  end
 
   # All Vagrant configuration is done here. The most common configuration
   # options are documented and commented below. For a complete reference,
@@ -35,7 +41,9 @@ Vagrant::Config.run do |config|
 
   # Forward a port from the guest to the host, which allows for outside
   # computers to access the VM, whereas host only networking does not.
-  config.vm.forward_port 8080, 8765
+  # config.vm.forward_port 8080, 8765
+  
+  config.vm.network "forwarded_port", guest: 8080, host: 8765
 
   # Share an additional folder to the guest VM. The first argument is
   # an identifier, the second is the path on the guest to mount the
@@ -60,6 +68,7 @@ Vagrant::Config.run do |config|
   # #               Managed by Puppet.\n"
   # # }
   #
+
 
   config.vm.provision :puppet do |puppet|
     puppet.manifests_path = "manifests"
